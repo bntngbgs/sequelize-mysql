@@ -40,4 +40,35 @@ const addProduct = async (req, res) => {
   }
 };
 
-module.exports = { getAllProducts, getProduct, addProduct };
+const updateProduct = async (req, res) => {
+  const { name, price, stock, status, image_url } = req.body;
+  const id = req.params.id;
+
+  const product = await Product.findOne({ where: { id: id } });
+
+  product.name = name;
+  product.price = price;
+  product.stock = stock;
+  product.status = status;
+  product.image_url = image_url;
+
+  await product.save();
+
+  res.send({ msg: 'product updated' });
+};
+
+const deleteProduct = async (req, res) => {
+  const productId = req.params.id;
+
+  await Product.destroy({ where: { id: productId } });
+
+  res.send({ msg: 'product deleted' });
+};
+
+module.exports = {
+  getAllProducts,
+  getProduct,
+  addProduct,
+  deleteProduct,
+  updateProduct,
+};
